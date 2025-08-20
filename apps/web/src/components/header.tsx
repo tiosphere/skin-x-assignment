@@ -1,8 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
+
+function logout() {
+	authClient.signOut({
+		fetchOptions: {
+			onSuccess: () => {
+				toast.success("Successfully Logout!");
+			},
+		},
+	});
+}
 
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,17 +66,24 @@ export default function Header() {
 
 						<div className="flex items-center space-x-4">
 							{session.data?.session ? (
-								<Button className="transform rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-pink-500/25">
-									Dashboard
+								<Button
+									onClick={() => logout()}
+									className="transform rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-pink-500/25"
+								>
+									Log Out
 								</Button>
 							) : (
 								<>
-									<Button className="rounded-full border border-teal-400 px-6 py-2 text-teal-400 transition-all duration-300 hover:bg-teal-400 hover:text-black">
-										Login
-									</Button>
-									<Button className="transform rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-pink-500/25">
-										Sign Up
-									</Button>
+									<Link to="/login">
+										<Button className="rounded-full border border-teal-400 px-6 py-2 text-teal-400 transition-all duration-300 hover:bg-teal-400 hover:text-black">
+											Login
+										</Button>
+									</Link>
+									<Link to="/signup">
+										<Button className="transform rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-pink-500/25">
+											Sign Up
+										</Button>
+									</Link>
 								</>
 							)}
 						</div>
@@ -113,17 +131,24 @@ export default function Header() {
 						</a>
 						<div className="flex flex-col space-y-3 pt-4">
 							{session.data?.session ? (
-								<Button className="rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/25">
-									Dashboard
+								<Button
+									onClick={() => logout()}
+									className="rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/25"
+								>
+									Log Out
 								</Button>
 							) : (
 								<>
-									<Button className="rounded-full border border-teal-400 px-6 py-2 text-teal-400 transition-all duration-300 hover:bg-teal-400 hover:text-black">
-										Login
-									</Button>
-									<Button className="rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/25">
-										Sign Up
-									</Button>
+									<Link to="/login">
+										<Button className="rounded-full border border-teal-400 px-6 py-2 text-teal-400 transition-all duration-300 hover:bg-teal-400 hover:text-black">
+											Login
+										</Button>
+									</Link>
+									<Link to="/signup">
+										<Button className="rounded-full bg-gradient-to-r from-pink-500 to-teal-400 px-6 py-2 text-white transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/25">
+											Sign Up
+										</Button>
+									</Link>
 								</>
 							)}
 						</div>
