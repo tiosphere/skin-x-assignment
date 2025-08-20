@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/signup")({
 	component: RouteComponent,
 });
 
@@ -25,24 +25,27 @@ function RouteComponent() {
 			});
 		}
 	});
+
 	const form = useForm({
 		defaultValues: {
 			email: "",
 			password: "",
+			name: "",
 		},
 		onSubmit: async ({ value }) => {
-			await authClient.signIn.email(
+			await authClient.signUp.email(
 				{
 					email: value.email,
 					password: value.password,
+					name: value.name,
 				},
 				{
 					onSuccess: () => {
-						toast.success("Sign in successful");
 						navigate({
 							from: "/login",
 							to: "/",
 						});
+						toast.success("Sign up successful");
 					},
 					onError: (error) => {
 						toast.error(error.error.message || error.error.statusText);
@@ -52,6 +55,7 @@ function RouteComponent() {
 		},
 		validators: {
 			onSubmit: z.object({
+				name: z.string().min(2, "Name must be at least 2 characters"),
 				email: z.email("Invalid email address"),
 				password: z.string().min(8, "Password must be at least 8 characters"),
 			}),
@@ -71,8 +75,9 @@ function RouteComponent() {
 			{/* Signup Card */}
 			<div className="relative z-10 w-full max-w-md rounded-2xl border border-gray-700 bg-gradient-to-br from-gray-900 to-gray-800 p-8 shadow-2xl">
 				<h1 className="mb-6 bg-gradient-to-r from-pink-400 to-teal-400 bg-clip-text text-center font-bold text-4xl text-transparent">
-					Login
+					Create an Account
 				</h1>
+
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();
@@ -81,6 +86,35 @@ function RouteComponent() {
 					}}
 					className="space-y-6"
 				>
+					{/* Username */}
+					<div>
+						<form.Field name="name">
+							{(field) => (
+								<div className="space-y-2">
+									<Label
+										className="mb-2 block font-medium text-gray-300 text-sm"
+										htmlFor={field.name}
+									>
+										Name
+									</Label>
+									<Input
+										className="w-full rounded-lg border border-gray-600 bg-gray-900/70 px-4 py-3 text-white placeholder-gray-500 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-400"
+										id={field.name}
+										name={field.name}
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									{field.state.meta.errors.map((error) => (
+										<p key={error?.message} className="text-red-500">
+											{error?.message}
+										</p>
+									))}
+								</div>
+							)}
+						</form.Field>
+					</div>
+
 					{/* Email */}
 					<div>
 						<form.Field name="email">
@@ -149,7 +183,7 @@ function RouteComponent() {
 								disabled={!state.canSubmit || state.isSubmitting}
 								className="w-full rounded-full bg-gradient-to-r from-pink-500 to-teal-400 py-3 font-semibold text-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/25"
 							>
-								{state.isSubmitting ? "Submitting..." : "Log In"}
+								{state.isSubmitting ? "Submitting..." : "Sign Up"}
 							</Button>
 						)}
 					</form.Subscribe>
@@ -157,10 +191,10 @@ function RouteComponent() {
 
 				{/* Link to Login */}
 				<p className="mt-6 text-center text-gray-400 text-sm">
-					Create new account?{" "}
-					<Link to="/signup">
+					Already have an account?{" "}
+					<Link to="/login">
 						<Button className="bg-gradient-to-r from-pink-400 to-teal-400 bg-clip-text font-semibold text-transparent hover:underline">
-							Sign Up
+							Log in
 						</Button>
 					</Link>
 				</p>

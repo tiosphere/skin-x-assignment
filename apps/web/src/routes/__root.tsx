@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { link, type orpc } from "@/utils/orpc";
 import type { AppRouterClient } from "../../../server/src/routers";
 import "../index.css";
+import { Footer } from "@/components/footer";
 
 export interface RouterAppContext {
 	orpc: typeof orpc;
@@ -50,7 +51,7 @@ function RootComponent() {
 	});
 
 	const [client] = useState<AppRouterClient>(() => createORPCClient(link));
-	const [orpcUtils] = useState(() => createTanstackQueryUtils(client));
+	const [_] = useState(() => createTanstackQueryUtils(client));
 
 	return (
 		<>
@@ -62,11 +63,8 @@ function RootComponent() {
 			>
 				<div className="grid h-svh grid-rows-[auto_1fr]">
 					<Header />
-					<main className="flex h-full justify-center pb-8 max-md:px-2">
-						<div className="w-full max-w-screen-xl px-2 py-4">
-							{isFetching ? <Loader /> : <Outlet />}
-						</div>
-					</main>
+					<main className="h-full">{isFetching ? <Loader /> : <Outlet />}</main>
+					<Footer />
 				</div>
 				<Toaster richColors />
 			</ThemeProvider>

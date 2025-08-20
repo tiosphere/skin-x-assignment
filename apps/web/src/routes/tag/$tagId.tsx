@@ -1,11 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import Paginate from "@/components/paginate";
 import { PostItem } from "@/components/post-item";
 import { authClient } from "@/lib/auth-client";
 import { queryAllTags, queryPostList } from "@/lib/query";
+import { findTagById } from "@/lib/utils";
 
-export const Route = createFileRoute("/post/")({
+export const Route = createFileRoute("/tag/$tagId")({
 	component: RouteComponent,
 });
 
@@ -21,7 +22,8 @@ function RouteComponent() {
 
 	// Loading Data
 	const [pageNumber, setPageNumber] = useState(1);
-	const allPosts = queryPostList(pageNumber);
+	const { tagId } = useParams({ strict: false });
+	const allPosts = queryPostList(pageNumber, tagId ? +tagId : undefined);
 	const allTags = queryAllTags();
 
 	function nextPage() {
@@ -32,7 +34,8 @@ function RouteComponent() {
 		if (pageNumber > 1) setPageNumber(pageNumber - 1);
 	}
 
-	if (allTags.isSuccess && allPosts.isSuccess) {
+	if (tagId && allTags.isSuccess && allPosts.isSuccess) {
+		const currentTag = findTagById(+tagId, allTags.data);
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-pink-900/20 via-purple-900/20 to-teal-900/20 text-white">
 				{/* Hero Section */}
@@ -45,11 +48,15 @@ function RouteComponent() {
 
 					<div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
 						<h1 className="mb-6 bg-gradient-to-r from-white via-teal-300 to-pink-300 bg-clip-text font-black text-5xl text-transparent md:text-6xl">
-							Explore Our Latest Posts
+							{currentTag
+								? `Posts Tagged: ${currentTag.name}`
+								: "Explore Our Latest Posts"}
 						</h1>
+
 						<p className="mx-auto max-w-2xl text-gray-300 text-lg">
-							Stay updated with the newest insights, tutorials, and stories from
-							our community.
+							{currentTag
+								? `Discover all posts related to "${currentTag.name}".`
+								: "Stay updated with the newest insights, tutorials, and stories from our community."}
 						</p>
 					</div>
 				</section>
