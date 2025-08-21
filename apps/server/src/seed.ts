@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { db } from "./db";
 import { posts, postTags, tags } from "./db/schema/post";
 
@@ -27,6 +28,10 @@ function readJsonFile(): Post[] {
 		...r,
 		postedAt: new Date(r.postedAt),
 	}));
+}
+
+async function checkDataExist() {
+	return db.$count(tags);
 }
 
 async function insertTags(tagSet: Set<string>): Promise<Map<string, number>> {
@@ -58,7 +63,19 @@ async function insertPost(post: Post, tagMap: Map<string, number>) {
 	});
 }
 
-async function seed() {
+async function migration() {
+	console.log("Perform migration check");
+	await migrate(db, { migrationsFolder: "./src/db/migrations" });
+	return;
+}
+
+export async function seed() {
+	await migration();
+	if (await checkDataExist()) {
+		console.log("Data already existed!!");
+		return;
+	}
+	console.log("Creating Mock Data...");
 	const tagSet = new Set<string>();
 	const allPosts = readJsonFile();
 	for (const post of allPosts) {
@@ -71,5 +88,3 @@ async function seed() {
 		await insertPost(post, tagMap);
 	}
 }
-
-await seed();

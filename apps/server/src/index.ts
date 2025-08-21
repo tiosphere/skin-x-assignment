@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import { auth } from "./lib/auth";
 import { createContext } from "./lib/context";
 import { appRouter } from "./routers/index";
+import { seed } from "./seed";
 
 const app = new Hono();
 
@@ -40,4 +41,5 @@ app.get("/", (c) => {
 	return c.text("OK");
 });
 
+await seed();
 export default app;
