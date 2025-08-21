@@ -2,6 +2,12 @@
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Router, Hono, ORPC, and more.
 
+## Content
+- [**Features**](#features) - Overall techstack and features
+- [**Demo**](#Demo) - Fast and easy demo with Docker
+- [**Getting Started**](#demo) - Fast and easy demo with Docker
+- [**Structure**](#project-structure) - Overall project file structure
+
 ## Features
 
 - **TypeScript** - For type safety and improved developer experience
@@ -16,6 +22,16 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 - **Authentication** - Email & password authentication with Better Auth
 - **Biome** - Linting and formatting
 - **Turborepo** - Optimized monorepo build system
+
+## Demo
+
+Check out demo and ready to test with docker compose. 
+
+Go to [localhost:8000](localhost:8000) for frontend and [localhost:3000](localhost:3000) for backend
+
+```bash
+docker-compose up
+```
 
 ## Getting Started
 
@@ -40,7 +56,7 @@ bun db:push
 Then, run the development server:
 
 ```bash
-bun dev
+bun run dev
 ```
 
 Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
