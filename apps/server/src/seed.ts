@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import path from "node:path";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { db } from "./db";
 import { posts, postTags, tags } from "./db/schema/post";
@@ -21,8 +20,7 @@ type Post = {
 };
 
 function readJsonFile(): Post[] {
-	const filePath = path.join(__dirname, "..", "posts.json");
-	const data = fs.readFileSync(filePath, "utf8");
+	const data = fs.readFileSync("./posts.json", "utf8");
 	const raw: RawPost[] = JSON.parse(data);
 	return raw.map((r) => ({
 		...r,

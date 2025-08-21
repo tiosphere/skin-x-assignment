@@ -1,6 +1,23 @@
 name: skin-x-assignment
 
 services:
+  backend:
+    build: 
+      context: .
+      dockerfile: dockerfile.backend
+    container_name: skin-x-assignment-hono-backned
+    environment:
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/skin-x-assignment"
+      CORS_ORIGIN: "http://localhost:8000"
+      BETTER_AUTH_SECRET: "KDHUVHp63iwoZqLq2vb3ziEJTL7TM3aR"
+      BETTER_AUTH_URL: "http://localhost:8000"
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - skin-x-network
+    depends_on:
+      - postgres
   postgres:
     image: postgres
     container_name: skin-x-assignment-postgres
@@ -18,6 +35,10 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    networks:
+      - skin-x-network
 
 volumes:
   skin-x-assignment_postgres_data:
+networks:
+  skin-x-network: {}
